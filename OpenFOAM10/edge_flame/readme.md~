@@ -1,0 +1,6 @@
+first generate mesh
+enter command
+blockMesh
+and then reactingFoam
+
+
