@@ -1,0 +1,34 @@
+(*parameters*)zeta = 0.5`32;Le = 1.6`32; ny=481; Clear[Z];
+(**refrence length scale alpha/u* u=0.2**)
+u0=0.2; (**m/s**)
+y0=19*10^-6/u0;(**m**)
+ydat=Import["./y.dat"]//Flatten;
+ymax1=0.1/y0;
+ny=
+Z[x_?NumberQ, y_?NumberQ] :=
+   1/2 + Exp[x/2] (x /2/Pi) NIntegrate[
+            BesselK[1, Sqrt[x^2 + t^2]/2]/Sqrt[t^2 + x^2], {t, 0, y},
+            AccuracyGoal -> 16, PrecisionGoal -> 16, 
+    MaxRecursion -> 25,WorkingPrecision->32];
+(********************************)
+Clear[xparam];
+xparam[\[Zeta]_?NumberQ, ymax_] :=     
+  Module[{zs}, hy = 2*ymax/(ny - 1);
+         zs = FindRoot[Equal[\[Zeta],
+        Times[2, Power[Pi, -1],
+           
+       ArcTan[Times[Rational[1, 2], 
+         Power[E, Times[Rational[1, 2], x]],
+                 Power[Pi, -1], x, 
+         Power[Power[x, 2], Rational[-1, 2]], ymax,
+                 BesselK[1,                  
+          Times[Rational[1, 2], 
+           Power[Power[x, 2], Rational[1, 2]]]]]]]] , {x, 1}];
+         x0 = (x /. zs); Return[x0]];
+(**************************************)
+  InletProfile[\[Zeta]_, x0_, ymax_, Le_] :=     
+  Module[{zs}, list = Table[Z[x0, Le ydat[[i]]/y0], {i,1,Length[ydat]}];
+         Export["./inlet.dat", list, "List"]//Return;];
+  InletProfile[zeta, xparam[zeta, ymax1]/Le,ymax1, Le]//Print;
+(*Quit[];
+*)
