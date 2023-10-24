@@ -1,2 +1,2 @@
 This folder consists of extra openfoam tutorials especially on newer topics like edge flames,triple flames etc...
-to run them : follow the instruction inside readme file inside the folder
+to run them : follow the instruction in readme file inside the folder
