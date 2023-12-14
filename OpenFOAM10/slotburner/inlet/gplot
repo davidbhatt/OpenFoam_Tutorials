@@ -1,0 +1,6 @@
+set terminal png
+set output "inlet.png"
+set title "inlet Mixture fraction Plot"
+set xlabel "y"
+set ylabel "Mixture fraction (Z)"
+plot "z.dat" using 1:2 with linespoints title "Z"
